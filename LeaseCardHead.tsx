@@ -1,59 +1,80 @@
 import React, { useEffect, useRef, useState } from 'react';
+import {
+  PencilSquareIcon,
+  SpeakerXMarkIcon,
+  TrashIcon,
+  EllipsisVerticalIcon,
+} from '@heroicons/react/24/outline';
 
 export interface LeaseCardHeadProps {
   name: string;
   icon?: string;
   style?: React.CSSProperties;
+  onEdit?: () => void;
+  onMute?: () => void;
+  onDelete?: () => void;
 }
 
 const LeaseCardHead: React.FC<LeaseCardHeadProps> = ({
   name,
   icon = '/real-estate-analysis/assets/icon/lease.png',
   style = {},
+  onEdit,
+  onMute,
+  onDelete,
 }) => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close menu on outside click
+  // Close dropdown on outside click
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
   return (
     <div className="lease-card__head" style={style}>
+      {/* LEFT */}
       <div className="tower-icon">
         <img
           src={icon}
           alt="Lease Icon"
-          style={{ width: 20, height: 20, marginRight: 8 }}
+          className="lease-icon"
         />
-        <div className="lease-title">{name}</div>
+        <span className="lease-title">{name}</span>
       </div>
 
-      {/* Ellipsis */}
+      {/* RIGHT */}
       <div className="ellipsis-wrapper" ref={menuRef}>
         <button
           className="ellipsis-btn"
-          onClick={() => setOpen(prev => !prev)}
+          onClick={() => setOpen(o => !o)}
           aria-haspopup="menu"
           aria-expanded={open}
         >
-          ⋯
+          <EllipsisVerticalIcon width={20} height={20} />
         </button>
 
         {open && (
           <div className="ellipsis-menu">
-            <button onClick={() => console.log('Edit')}>✏️ Edit</button>
-            <button onClick={() => console.log('Mute')}>🔇 Mute</button>
-            <button className="danger" onClick={() => console.log('Delete')}>
-              🗑 Delete
+            <button onClick={onEdit}>
+              <PencilSquareIcon width={18} height={18} />
+              Edit
+            </button>
+
+            <button onClick={onMute}>
+              <SpeakerXMarkIcon width={18} height={18} />
+              Mute
+            </button>
+
+            <button className="danger" onClick={onDelete}>
+              <TrashIcon width={18} height={18} />
+              Delete
             </button>
           </div>
         )}
@@ -66,55 +87,63 @@ export default LeaseCardHead;
 
 
 
+
+
+.lease-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #ece9ff, #fbeaea);
+  border-radius: 14px;
+}
+
+/* LEFT */
+.tower-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lease-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.lease-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ELLIPSIS */
 .ellipsis-wrapper {
-  position: relative; /* anchor for dropdown */
+  position: relative;
 }
 
 .ellipsis-btn {
   background: none;
   border: none;
-  font-size: 22px;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 6px;
+  border-radius: 50%;
 }
 
-/* DROPDOWN MENU */
+.ellipsis-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* DROPDOWN */
 .ellipsis-menu {
   position: absolute;
-  top: 36px;              /* pushes it BELOW the dots */
-  right: 0;               /* aligns to right like screenshot */
-  background: #fff;
-  border-radius: 10px;
+  top: 36px;
+  right: 0;
   min-width: 160px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
-  z-index: 9999;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
   overflow: hidden;
-}
-
-
-
-.ellipsis-menu button {
-  width: 100%;
-  padding: 12px 14px;
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.ellipsis-menu button:hover {
-  background: #f5f6f8;
-}
-
-.ellipsis-menu .danger {
-  color: #d32f2f;
-}
-
-
-.ellipsis-menu {
   animation: dropdown 120ms ease-out;
 }
 
@@ -128,3 +157,46 @@ export default LeaseCardHead;
     transform: translateY(0);
   }
 }
+
+.ellipsis-menu button {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.ellipsis-menu button:hover {
+  background: #f5f6f8;
+}
+
+.ellipsis-menu svg {
+  color: #6b7280;
+}
+
+.ellipsis-menu button:hover svg {
+  color: #111827;
+}
+
+/* DELETE */
+.ellipsis-menu .danger {
+  color: #d32f2f;
+}
+
+.ellipsis-menu .danger svg {
+  color: #d32f2f;
+}
+
+
+
+<LeaseCardHead
+  name="Jane Smith - BILL-001"
+  onEdit={() => console.log('Edit')}
+  onMute={() => console.log('Mute')}
+  onDelete={() => console.log('Delete')}
+/>
