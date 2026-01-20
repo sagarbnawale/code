@@ -63,3 +63,68 @@ const LeaseCardHead: React.FC<LeaseCardHeadProps> = ({
 };
 
 export default LeaseCardHead;
+
+
+
+.ellipsis-wrapper {
+  position: relative; /* anchor for dropdown */
+}
+
+.ellipsis-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+/* DROPDOWN MENU */
+.ellipsis-menu {
+  position: absolute;
+  top: 36px;              /* pushes it BELOW the dots */
+  right: 0;               /* aligns to right like screenshot */
+  background: #fff;
+  border-radius: 10px;
+  min-width: 160px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+
+
+.ellipsis-menu button {
+  width: 100%;
+  padding: 12px 14px;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.ellipsis-menu button:hover {
+  background: #f5f6f8;
+}
+
+.ellipsis-menu .danger {
+  color: #d32f2f;
+}
+
+
+.ellipsis-menu {
+  animation: dropdown 120ms ease-out;
+}
+
+@keyframes dropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
