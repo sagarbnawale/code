@@ -1,47 +1,29 @@
-type CheckboxProps = {
-  label?: string;
-  checked: boolean;
-  onChange?: (checked: boolean) => void;
-  disabled?: boolean;
-};
+const value = e.target.value;
 
-export default function Checkbox({
-  label,
-  checked,
-  onChange,
-  disabled = false,
-}: CheckboxProps) {
-  return (
-    <label className="flex items-center gap-2 cursor-pointer select-none">
-      <input
-        type="checkbox"
-        checked={checked}
-        disabled={disabled}
-        onChange={(e) => onChange?.(e.target.checked)}
-        className="
-          h-4 w-4
-          rounded
-          border-gray-300
-          text-indigo-600
-          focus:ring-2 focus:ring-indigo-500
-          disabled:cursor-not-allowed
-          disabled:opacity-50
-        "
-      />
-      {label && (
-        <span className="text-sm text-gray-700">
-          {label}
-        </span>
-      )}
-    </label>
-  );
-}
+if (/^-?\d*\.?\d*$/.test(value)) {
+  // Update UI string state
+  setAmountInputs(prev => ({
+    ...prev,
+    [idx]: value
+  }));
 
+  // Only update Decimal when valid number
+  if (
+    value !== "" &&
+    value !== "-" &&
+    value !== "." &&
+    value !== "-."
+  ) {
+    const updated = [...(rental.transaction_model_rental_customer_revenue ?? [])];
 
-<Checkbox
-  label="Still Running"
-  checked={formData.stillRunning}
-  onChange={(val) =>
-    setFormData({ ...formData, stillRunning: val })
+    updated[idx] = {
+      ...updated[idx],
+      amount: new Decimal(value)
+    };
+
+    setRental({
+      ...rental,
+      transaction_model_rental_customer_revenue: updated
+    });
   }
-/>
+}
